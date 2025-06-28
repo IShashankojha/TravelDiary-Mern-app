@@ -64,7 +64,7 @@ app.post("/create-account", async (req, res) => {
         // Generate JWT token
         const accessToken = jwt.sign(
             { userId: user._id },
-            process.env.ACCESS_TOKEN_SECRET,
+            config.ACCESS_TOKEN_SECRET,
             { expiresIn: "72h" } // Token expires in 72 hours
         );
 
@@ -109,7 +109,7 @@ app.post("/login", async (req, res) => {
         // Generate an access token
         const accessToken = jwt.sign(
             { userId: user._id, email: user.email },
-            process.env.ACCESS_TOKEN_SECRET,
+            config.ACCESS_TOKEN_SECRET,
             { expiresIn: "72h" }
         );
 
@@ -140,14 +140,14 @@ app.get("/get-user", authenticateToken, async (req, res) => {
         return res.status(500).json({ error: true, message: error.message });
     }
 });
-
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 // Routes to handle the image upload
 app.post("/image-upload", upload.single("image"), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ error: true, message: "No file uploaded" });
         }
-        const imageUrl = `http://localhost:8000/uploads/${req.file.filename}`;
+        const imageUrl = `/uploads/${req.file.filename}`;
         res.status(200).json({ imageUrl });
     } catch (error) {
         res.status(500).json({ error: true, message: error.message });
@@ -247,7 +247,7 @@ app.put("/edit-Story/:id", authenticateToken, async (req, res) => {
             return res.status(404).json({ error: true, message: "Travel story not found" });
         }
 
-        const placeholderImgUrl = `http://localhost:8000/assets/placeholder.jpeg`;
+        const placeholderImgUrl = `https://localhost:8000/uploads/placeholder.jpeg`;
         travelStory.title = title;
         travelStory.story = story;
         travelStory.visitedLocation = visitedLocation;
