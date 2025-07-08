@@ -153,8 +153,7 @@ app.post("/image-upload", upload.single("image"), async (req, res) => {
         res.status(500).json({ error: true, message: error.message });
     }
 });
-https://traveldiary-back.onrender.com
-// Delete an image from the uploads folder
+ // Delete an image from the uploads folder
 app.delete("/delete-image", async (req, res) => {
     const { imageUrl } = req.query;
 
